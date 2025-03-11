@@ -35,9 +35,17 @@ npm run dev
 ```
 
 ## Accessing the Application
+After starting both servers, you can expose the ports to access them remotely:
 
-- Frontend: http://localhost:8000
-- Backend API: http://localhost:3000/api
+```bash
+# Expose the frontend port
+expose_port 8000
+
+# Expose the backend API port
+expose_port 3000
+```
+
+The exposed URLs will be provided after running these commands.
 
 ## API Endpoints
 
