@@ -138,6 +138,34 @@
             font-size: 0.8rem;
             margin-left: 5px;
         }
+        .message {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            display: none;
+        }
+        .success-message {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+        .error-message {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
         /* Navigation Styles */
         .navbar {
             background-color: #333;
@@ -195,6 +223,7 @@
         <div id="cart-container">
             <div class="loading">Loading cart...</div>
         </div>
+        <div id="message" class="message"></div>
     </div>
     
     <script>
@@ -368,12 +397,64 @@
             
             // Checkout function
             function checkout() {
-                alert('Checkout functionality will be implemented in the future.');
+                // Get cart items from localStorage
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const messageElement = document.getElementById('message');
                 
-                // For now, just clear the cart
-                localStorage.removeItem('cart');
-                updateCartCount();
-                loadCart();
+                if (cart.length === 0) {
+                    showMessage('Your cart is empty.', 'error');
+                    return;
+                }
+                
+                // Show loading state
+                const checkoutBtn = document.querySelector('.checkout-btn');
+                checkoutBtn.disabled = true;
+                checkoutBtn.innerHTML = '<span class="spinner"></span> Processing...';
+                
+                // Format cart items for the API
+                const orderItems = cart.map(item => ({
+                    product_id: item.id,
+                    quantity: item.quantity
+                }));
+                
+                // Call the API to create an order
+                fetch('http://localhost:3000/api/v1/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: 3, // Using the existing user ID from the database
+                        order_items: orderItems
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(data => {
+                            throw new Error(data.errors || 'Failed to create order');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(order => {
+                    // Clear the cart
+                    localStorage.removeItem('cart');
+                    updateCartCount();
+                    
+                    // Show success message and redirect to orders page
+                    showMessage('Order placed successfully! Redirecting to orders page...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'orders.html';
+                    }, 2000);
+                })
+                .catch(error => {
+                    showMessage('Error: ' + error.message, 'error');
+                    console.error('Error creating order:', error);
+                    
+                    // Reset checkout button
+                    checkoutBtn.disabled = false;
+                    checkoutBtn.textContent = 'Proceed to Checkout';
+                });
             }
             
             // Update cart count
@@ -388,6 +469,28 @@
                 } else {
                     cartCountElement.style.display = 'inline';
                 }
+            }
+            
+            // Function to show messages
+            function showMessage(text, type) {
+                const messageElement = document.getElementById('message');
+                messageElement.textContent = text;
+                messageElement.className = `message ${type}-message`;
+                messageElement.style.display = 'block';
+                
+                // Auto-hide success messages after 5 seconds
+                if (type === 'success') {
+                    setTimeout(() => {
+                        messageElement.style.display = 'none';
+                    }, 5000);
+                }
+            }
+            
+            // Function to reset product stock display
+            function resetProductStock() {
+                // This function would ideally fetch the latest product data from the API
+                // and update the stock display on the products page
+                // For now, we'll just reload the products page when the user navigates back to it
             }
             
             // Initialize

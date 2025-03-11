@@ -1,6 +1,10 @@
 class Api::V1::OrdersController < ApplicationController
   def index
-    orders = Order.includes(order_items: :product).where(user_id: params[:user_id])
+    if params[:user_id]
+      orders = Order.includes(order_items: :product).where(user_id: params[:user_id])
+    else
+      orders = Order.includes(order_items: :product).all
+    end
     render json: orders, include: { order_items: { include: :product } }
   end
 
