@@ -60,45 +60,45 @@ export default {
       return this.$store.state.cart.items;
     },
     subtotal() {
-      return this.$store.getters['subtotal'];
+      return this.$store.getters['cart/subtotal'] || 0;
     },
     shipping() {
-      return this.$store.state.cart.shipping;
+      return this.$store.state.cart.shipping || 0;
     },
     tax() {
-      return this.$store.getters['tax'];
+      return this.$store.getters['cart/tax'] || 0;
     },
     total() {
-      return this.$store.getters['total'];
+      return this.$store.getters['cart/total'] || 0;
     }
   },
   methods: {
     increaseQuantity(item) {
-      this.$store.dispatch('updateItemQuantity', {
+      this.$store.dispatch('cart/updateItemQuantity', {
         itemId: item.id,
         quantity: item.quantity + 1
       });
     },
     decreaseQuantity(item) {
       if (item.quantity > 1) {
-        this.$store.dispatch('updateItemQuantity', {
+        this.$store.dispatch('cart/updateItemQuantity', {
           itemId: item.id,
           quantity: item.quantity - 1
         });
       }
     },
     removeItem(itemId) {
-      this.$store.dispatch('removeFromCart', itemId);
+      this.$store.dispatch('cart/removeFromCart', itemId);
     },
     checkout() {
       alert('Thank you for your order!');
-      this.$store.dispatch('clearCart');
+      this.$store.dispatch('cart/clearCart');
       this.$router.push('/');
     }
   },
   mounted() {
     // Initialize cart from localStorage
-    this.$store.dispatch('initCart');
+    this.$store.dispatch('cart/initCart');
   }
 }
 </script>
