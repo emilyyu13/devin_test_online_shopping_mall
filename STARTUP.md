@@ -1,46 +1,51 @@
-# Online Shopping Mall
+# Online Shopping Mall - Startup Instructions
 
-An e-commerce platform with product browsing, cart functionality, and order management.
-
-## Tech Stack
-
-- **Frontend**: Nuxt.js
-- **Backend**: Ruby on Rails API (Ruby 3.2.3)
-- **Database**: PostgreSQL
-
-## Features
-
-- Product browsing and listing
-- Shopping cart functionality
-- Order creation and management
-- User management
-
-## Setup Instructions
-
-### Prerequisites
-
+## Prerequisites
 - Ruby 3.2.3
 - Node.js and npm
 - PostgreSQL
 
-### Backend Setup
+## Backend Setup
 
 ```bash
+# Navigate to the backend directory
 cd backend
+
+# Install dependencies
 bundle install
+
+# Create and set up the database
 rails db:create db:migrate db:seed
+
+# Start the Rails server
 rails server -p 3000
 ```
 
-### Frontend Setup
+## Frontend Setup
 
 ```bash
+# Navigate to the frontend directory
 cd frontend
+
+# Install dependencies
 npm install
+
+# Start the Nuxt development server
 npm run dev
 ```
 
-The frontend will be available at http://localhost:8000 and will connect to the backend at http://localhost:3000/api
+## Accessing the Application
+After starting both servers, you can expose the ports to access them remotely:
+
+```bash
+# Expose the frontend port
+expose_port 8000
+
+# Expose the backend API port
+expose_port 3000
+```
+
+The exposed URLs will be provided after running these commands.
 
 ## API Endpoints
 
