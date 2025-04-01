@@ -16,7 +16,9 @@ export default {
   css: [],
 
   // Plugins to run before rendering page
-  plugins: [],
+  plugins: [
+    '~/plugins/cart-init.js'
+  ],
 
   // Auto import components
   components: true,
