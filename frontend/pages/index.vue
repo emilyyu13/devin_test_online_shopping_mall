@@ -31,13 +31,30 @@ export default {
         // Decrease stock
         this.products[productIndex].stock--
         // Add to cart
-        this.$store.dispatch('addToCart', product)
+        this.$store.dispatch('cart/addToCart', product)
+        
+        // Show notification
+        this.showAddedToCartNotification(product.name)
+        
+        // Add animation to the button
+        const button = document.activeElement
+        button.classList.add('added-to-cart')
+        setTimeout(() => {
+          button.classList.remove('added-to-cart')
+        }, 1000)
+      }
+    },
+    
+    showAddedToCartNotification(productName) {
+      // Use the root layout's notification system
+      if (this.$root.$children[0] && this.$root.$children[0].showNotification) {
+        this.$root.$children[0].showNotification(`${productName} added to cart!`)
       }
     }
   },
   mounted() {
     // Initialize cart from localStorage
-    this.$store.dispatch('initCart')
+    this.$store.dispatch('cart/initCart')
   }
 }
 </script>
@@ -109,5 +126,22 @@ button:disabled {
 
 button:hover:not(:disabled) {
   background-color: #45a049;
+}
+
+button.added-to-cart {
+  background-color: #45a049;
+  animation: pulse 1s;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>
