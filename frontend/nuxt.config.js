@@ -34,9 +34,13 @@ export default {
 
   // Axios module configuration
   axios: {
-    baseURL: 'http://localhost:3000/api'
+    baseURL: 'http://localhost:3001'
   },
 
   // Build Configuration
-  build: {}
+  build: {},
+  
+  server: {
+    port: 3001
+  }
 }

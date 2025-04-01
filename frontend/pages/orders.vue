@@ -2,7 +2,11 @@
   <div class="container">
     <h1 class="title">Your Orders</h1>
     
-    <div v-if="orders.length === 0" class="no-orders">
+    <div v-if="loading" class="loading">Loading orders...</div>
+    
+    <div v-else-if="error" class="no-orders">{{ error }}</div>
+    
+    <div v-else-if="orders.length === 0" class="no-orders">
       You don't have any orders yet.
     </div>
     
@@ -36,27 +40,24 @@
 export default {
   data() {
     return {
-      orders: [
-        {
-          id: 1,
-          status: 'completed',
-          created_at: '2025-03-10T12:00:00Z',
-          total: 89.97,
-          order_items: [
-            { id: 1, product: { name: 'Product 1' }, quantity: 2, price: 19.99 },
-            { id: 2, product: { name: 'Product 2' }, quantity: 1, price: 49.99 }
-          ]
-        },
-        {
-          id: 2,
-          status: 'processing',
-          created_at: '2025-03-11T10:30:00Z',
-          total: 39.99,
-          order_items: [
-            { id: 3, product: { name: 'Product 3' }, quantity: 1, price: 39.99 }
-          ]
-        }
-      ]
+      orders: [],
+      loading: true,
+      error: null
+    }
+  },
+  async fetch() {
+    try {
+      // Fetch orders from the mock server
+      const response = await fetch('http://localhost:3001/api-v1-orders.json')
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      this.orders = await response.json()
+      this.loading = false
+    } catch (error) {
+      console.error('Error fetching orders:', error)
+      this.error = 'Error loading orders. Please try again later.'
+      this.loading = false
     }
   },
   methods: {
@@ -82,6 +83,11 @@ export default {
 .title {
   text-align: center;
   margin-bottom: 30px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
 }
 
 .no-orders {
