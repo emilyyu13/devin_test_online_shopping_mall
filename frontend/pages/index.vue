@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <h1 class="title">Online Shopping Mall</h1>
     <div class="products">
       <div v-for="product in products" :key="product.id" class="product-card">
         <h3>{{ product.name }}</h3>
