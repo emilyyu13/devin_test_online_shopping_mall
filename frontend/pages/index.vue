@@ -1,5 +1,15 @@
 <template>
   <div class="container">
+    <nav class="navigation">
+      <ul>
+        <li><a href="#" class="active">Products</a></li>
+        <li><a href="#">Orders</a></li>
+        <li><a href="#">Cart</a></li>
+        <li><a href="#">Account</a></li>
+        <li><a href="#">Admin</a></li>
+      </ul>
+    </nav>
+    
     <h1 class="title">Online Shopping Mall</h1>
     <div class="products">
       <div v-for="product in products" :key="product.id" class="product-card">
@@ -91,6 +101,41 @@ export default {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+}
+
+.navigation {
+  margin-bottom: 30px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+}
+
+.navigation ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navigation li {
+  margin-right: 20px;
+}
+
+.navigation a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.navigation a:hover {
+  background-color: #f5f5f5;
+}
+
+.navigation a.active {
+  color: #4caf50;
+  border-bottom: 2px solid #4caf50;
 }
 
 .title {
