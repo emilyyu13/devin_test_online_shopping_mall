@@ -27,10 +27,7 @@ export default {
   ],
 
   // Modules
-  modules: [
-    // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios'
-  ],
+  modules: [],
 
   // Axios module configuration
   axios: {
@@ -38,5 +35,7 @@ export default {
   },
 
   // Build Configuration
-  build: {}
-}
+  build: {},
+
+  compatibilityDate: '2025-04-01'
+};
