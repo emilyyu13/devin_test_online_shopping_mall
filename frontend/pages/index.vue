@@ -9,16 +9,6 @@
         <button @click="addToCart(product)" :disabled="product.stock <= 0">Add to Cart</button>
       </div>
     </div>
-    
-    <div class="cart" v-if="cart.length > 0">
-      <h2>Your Cart</h2>
-      <div v-for="item in cart" :key="item.product.id" class="cart-item">
-        <span>{{ item.product.name }} - ${{ item.product.price }} x {{ item.quantity }}</span>
-        <button @click="removeFromCart(item.product)">Remove</button>
-      </div>
-      <p class="total">Total: ${{ cartTotal }}</p>
-      <button @click="checkout">Checkout</button>
-    </div>
   </div>
 </template>
 
@@ -30,57 +20,24 @@ export default {
         { id: 1, name: 'Product 1', description: 'Description for product 1', price: 19.99, stock: 10 },
         { id: 2, name: 'Product 2', description: 'Description for product 2', price: 29.99, stock: 5 },
         { id: 3, name: 'Product 3', description: 'Description for product 3', price: 39.99, stock: 8 }
-      ],
-      cart: []
-    }
-  },
-  computed: {
-    cartTotal() {
-      return this.cart.reduce((total, item) => {
-        return total + (item.product.price * item.quantity)
-      }, 0).toFixed(2)
+      ]
     }
   },
   methods: {
     addToCart(product) {
-      const existingItem = this.cart.find(item => item.product.id === product.id)
-      
-      if (existingItem) {
-        existingItem.quantity++
-      } else {
-        this.cart.push({
-          product,
-          quantity: 1
-        })
-      }
-      
-      // Decrease stock
+      // Check if there's stock available
       const productIndex = this.products.findIndex(p => p.id === product.id)
-      if (productIndex !== -1) {
+      if (productIndex !== -1 && this.products[productIndex].stock > 0) {
+        // Decrease stock
         this.products[productIndex].stock--
+        // Add to cart
+        this.$store.dispatch('addToCart', product)
       }
-    },
-    removeFromCart(product) {
-      const itemIndex = this.cart.findIndex(item => item.product.id === product.id)
-      
-      if (itemIndex !== -1) {
-        const item = this.cart[itemIndex]
-        
-        // Restore stock
-        const productIndex = this.products.findIndex(p => p.id === product.id)
-        if (productIndex !== -1) {
-          this.products[productIndex].stock += item.quantity
-        }
-        
-        // Remove from cart
-        this.cart.splice(itemIndex, 1)
-      }
-    },
-    checkout() {
-      // In a real application, this would send the order to the backend
-      alert('Order placed successfully!')
-      this.cart = []
     }
+  },
+  mounted() {
+    // Initialize cart from localStorage
+    this.$store.dispatch('initCart')
   }
 }
 </script>

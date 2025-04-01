@@ -8,8 +8,8 @@
         <div class="navbar-links">
           <nuxt-link to="/" class="nav-link">Home</nuxt-link>
           <nuxt-link to="/products" class="nav-link">Products</nuxt-link>
-          <nuxt-link to="/categories" class="nav-link">Categories</nuxt-link>
           <nuxt-link to="/orders" class="nav-link">Orders</nuxt-link>
+          <nuxt-link to="/cart" class="nav-link">Cart</nuxt-link>
           <nuxt-link to="/account" class="nav-link">My Account</nuxt-link>
         </div>
       </div>
