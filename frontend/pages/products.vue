@@ -66,56 +66,7 @@ export default {
       searchQuery: '',
       selectedCategory: '',
       sortBy: 'name',
-      products: [
-        { 
-          id: 1, 
-          name: 'Product 1', 
-          description: 'Description for product 1', 
-          price: 19.99, 
-          stock: 10,
-          category: 'electronics'
-        },
-        { 
-          id: 2, 
-          name: 'Product 2', 
-          description: 'Description for product 2', 
-          price: 29.99, 
-          stock: 5,
-          category: 'clothing'
-        },
-        { 
-          id: 3, 
-          name: 'Product 3', 
-          description: 'Description for product 3', 
-          price: 39.99, 
-          stock: 8,
-          category: 'home'
-        },
-        { 
-          id: 4, 
-          name: 'Product 4', 
-          description: 'Description for product 4', 
-          price: 49.99, 
-          stock: 3,
-          category: 'electronics'
-        },
-        { 
-          id: 5, 
-          name: 'Product 5', 
-          description: 'Description for product 5', 
-          price: 59.99, 
-          stock: 12,
-          category: 'clothing'
-        },
-        { 
-          id: 6, 
-          name: 'Product 6', 
-          description: 'Description for product 6', 
-          price: 69.99, 
-          stock: 0,
-          category: 'home'
-        }
-      ]
+      products: []
     }
   },
   computed: {
@@ -177,6 +128,24 @@ export default {
       if (this.$root.$children[0] && this.$root.$children[0].showNotification) {
         this.$root.$children[0].showNotification(`${productName} added to cart!`);
       }
+    }
+  },
+  async fetch() {
+    try {
+      // Import API service
+      const api = require('~/api').default;
+      
+      // Fetch products from API
+      const apiProducts = await api.getProducts();
+      
+      // Map API products to include category (if not present in API)
+      this.products = apiProducts.map(product => ({
+        ...product,
+        price: parseFloat(product.price),
+        category: product.category || 'electronics' // Default category if not provided by API
+      }));
+    } catch (error) {
+      console.error('Error fetching products:', error);
     }
   },
   mounted() {
