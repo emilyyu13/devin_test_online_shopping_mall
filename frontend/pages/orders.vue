@@ -19,7 +19,7 @@
         
         <div class="order-items">
           <div v-for="item in order.order_items" :key="item.id" class="order-item">
-            <span>{{ item.product.name }} x {{ item.quantity }}</span>
+            <span>{{ item.product ? item.product.name : `Product #${item.product_id}` }} x {{ item.quantity }}</span>
             <span>${{ item.price }}</span>
           </div>
         </div>
@@ -36,7 +36,20 @@
 export default {
   data() {
     return {
-      orders: [
+      orders: []
+    }
+  },
+  async fetch() {
+    try {
+      // Import API service
+      const api = require('~/api').default;
+      
+      // Fetch orders from API
+      this.orders = await api.getOrders();
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      // Keep some sample orders for display if API fails
+      this.orders = [
         {
           id: 1,
           status: 'completed',
@@ -56,7 +69,7 @@ export default {
             { id: 3, product: { name: 'Product 3' }, quantity: 1, price: 39.99 }
           ]
         }
-      ]
+      ];
     }
   },
   methods: {

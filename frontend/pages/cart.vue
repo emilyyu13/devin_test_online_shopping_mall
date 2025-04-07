@@ -90,10 +90,42 @@ export default {
     removeItem(itemId) {
       this.$store.dispatch('cart/removeFromCart', itemId);
     },
-    checkout() {
-      alert('Thank you for your order!');
-      this.$store.dispatch('cart/clearCart');
-      this.$router.push('/');
+    async checkout() {
+      try {
+        // Prepare order data from cart
+        const orderItems = this.cartItems.map(item => ({
+          product_id: item.id,
+          quantity: item.quantity
+        }));
+        
+        // Create order via API
+        const orderData = {
+          user_id: 1, // Using a default user ID for now
+          order_items: orderItems
+        };
+        
+        // Import API service
+        const api = require('~/api').default;
+        
+        // Send order to backend
+        const response = await api.createOrder(orderData);
+        
+        if (response.errors) {
+          throw new Error(response.errors.join(', '));
+        }
+        
+        // Clear cart after successful order
+        this.$store.dispatch('cart/clearCart');
+        
+        // Show success message
+        alert('Thank you for your order! Order #' + response.id + ' has been placed.');
+        
+        // Redirect to orders page
+        this.$router.push('/orders');
+      } catch (error) {
+        console.error('Checkout error:', error);
+        alert('There was an error processing your order: ' + error.message);
+      }
     }
   },
   mounted() {
