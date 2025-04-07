@@ -130,27 +130,30 @@ export default {
       }
     }
   },
-  async fetch() {
+  async mounted() {
     try {
+      // Initialize cart from localStorage
+      this.$store.dispatch('cart/initCart');
+      
       // Import API service
       const api = require('~/api').default;
       
       // Fetch products from API
       const apiProducts = await api.getProducts();
+      console.log('API products (mounted):', apiProducts);
       
-      // Map API products to include category (if not present in API)
-      this.products = apiProducts.map(product => ({
-        ...product,
-        price: parseFloat(product.price),
-        category: product.category || 'electronics' // Default category if not provided by API
-      }));
+      if (apiProducts && apiProducts.length > 0) {
+        // Map API products to include category (if not present in API)
+        this.products = apiProducts.map(product => ({
+          ...product,
+          price: parseFloat(product.price),
+          category: product.category || 'electronics' // Default category if not provided by API
+        }));
+        console.log('Mapped products (mounted):', this.products);
+      }
     } catch (error) {
       console.error('Error fetching products:', error);
     }
-  },
-  mounted() {
-    // Initialize cart from localStorage
-    this.$store.dispatch('cart/initCart');
   }
 }
 </script>
@@ -325,4 +328,3 @@ export default {
   }
 }
 </style>
-</template>
