@@ -40,5 +40,14 @@ module Backend
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+    
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins 'http://localhost:44113', 'http://localhost:36035'
+        resource '*',
+          headers: :any,
+          methods: [:get, :post, :put, :patch, :delete, :options, :head]
+      end
+    end
   end
 end
